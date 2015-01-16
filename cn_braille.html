@@ -12,7 +12,10 @@
 <body>
  <fieldset>
     <legend>转换选项</legend>
-    显示空白<input type="checkbox" checked onclick="data.blankChar=checked?'○':'　';getBraille()" />
+    空白显示为
+    		<input type="radio" id=blankchar1 name=blankchar checked onclick="data.blankChar='○';getBraille()" /><label for=blankchar1>圆圈</label>
+    		<input type="radio" id=blankchar2 name=blankchar onclick="data.blankChar='　';getBraille()" /><label for=blankchar2>全角空格</label>
+    		<input type="radio" id=blankchar3 name=blankchar onclick="data.blankChar=' ';getBraille()" /><label for=blankchar3>半角空格</label>
     显示原文<input type="checkbox" checked onclick="data.showText=checked;getBraille()" />
     显示音调<input type="checkbox" checked onclick="data.showTone=checked;getBraille()" />
 	每行<input onchange="data.maxCols=value;getBraille()" value=20>方
@@ -24,7 +27,7 @@
     <legend>同音字处理</legend>
 	<div id=output></div>
 </fieldset>
-<textarea id=output2 style="width:95%;font-family:宋体;overflow-y:visible" rows=10></textarea>
+<textarea id=output2 style="width:95%;font-family:PT Mono,宋体;overflow-y:visible" rows=10></textarea>
 </body>
 <script type="text/javascript">
 <!--
