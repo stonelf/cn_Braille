@@ -18,7 +18,7 @@
 	每行<input onchange="data.maxCols=value;getBraille()" value=20>方
   </fieldset><br>
 在这里输入要转换的文字：<br>
- <input value="Try to type some Chinese charector 输入几个字试试看" id="srcTxt" size="100"> 
+ <input value="输入几个字试试看 Hello World" id="srcTxt" size="100"> 
 <button onclick="showCandidate();">开始</button><br>
  <fieldset>
     <legend>同音字处理</legend>
@@ -37,7 +37,17 @@ var dictionary={
 		k:"13",l:"123",m:"134",n:"1345",o:"135",p:"1234",q:"12345",r:"1235",s:"234",
 		t:"2345",u:"136",v:"1236",w:"2456",x:"1346",y:"13456",z:"1356"
 	},
-	transPY1 :{b:"12",p:"1234",m:"134",f:"124",d:"145",t:"2345",n:"1345",l:"123",
+	transSymbol:{
+		//现行盲文的符号对照表找不到，这里用的是新的双拼盲文方案中的符号。
+		"。":[5,23],"，":[5,0],"、":[4,0],"；":[56,0],"？":[5,3],"！":[56,2],"：":[36,0],"“":[0,45],"”":[45,0],
+		"‘":[0,45,45],"’":[45,45,0],"（":[56,3],"）":[6,23],"［":[56,23],"］":[56,23],"——":[6,36],"《":[0,5,36],
+		"》":[36,2,0],"〈":[0,5,3],"〉":[6,2,0],"·":[6,3],//间隔号
+		//ascii
+		" ":"[0]","!":[2346],"\"":[5],"#":[3456],"$":[1246],"%":[146],"&":[12346],"'":[3],"(":[12356],")":[12456],
+		"*":[16],"+":[346],",":[6],"-":[36],".":[46],"/":[34],":":[156],";":[56],"<":[126],"=":[123456],
+		">":[345],"?":[1456],"@":[4],"[":[246],"\\":[1256],"]":[12456],"^":[45],"_":[456]
+	},
+	transPY1:{b:"12",p:"1234",m:"134",f:"124",d:"145",t:"2345",n:"1345",l:"123",
 		g:"1245",j:"1245",k:"13",q:"13",h:"125",x:"125",zh:"34",ch:"12345",sh:"156",
 		r:"245",z:"1356",c:"14",s:"234"
 	},	
@@ -51,9 +61,13 @@ var dictionary={
 	},
 	transPY3 :{
 		1:"1",2:"2",3:"3",4:"23",5:""// 阳平1 阴平2 上声3 去声23
+		//用的都是先行盲文方案。
 	},
 	transFullwidth :{
-		"#":"　","=":"　",0:"０",1:"１",2:"２",3:"３",4:"４",5:"５",6:"６",7:"７",8:"８",9:"９",
+		" ":"　","!":"！","\"":"＂","#":"＃","$":"﹩","%":"﹪","&":"﹠","'":"’","(":"（",")":"）",
+		"*":"﹡","+":"﹢",",":"，","-":"‐",".":"·","/":"／",":":"：",";":"；","<":"＜","=":"＝",
+		">":"＞","?":"？","@":"＠","[":"［","\\":"＼","]":"］","^":"＾","_":"＿",
+		0:"０",1:"１",2:"２",3:"３",4:"４",5:"５",6:"６",7:"７",8:"８",9:"９",
 		a:"ａ",b:"ｂ",c:"ｃ",d:"ｄ",e:"ｅ",f:"ｆ",g:"ｇ",h:"ｈ",i:"ｉ",j:"ｊ",		k:"ｋ",l:"ｌ",m:"ｍ",n:"ｎ",o:"ｏ",p:"ｐ",q:"ｑ",r:"ｒ",s:"ｓ",
 		t:"ｔ",u:"ｕ",v:"ｖ",w:"ｗ",x:"ｘ",y:"ｙ",z:"ｚ",
 		A:"Ａ",B:"Ｂ",C:"Ｃ",D:"Ｄ",E:"Ｅ",F:"Ｆ",G:"Ｇ",H:"Ｈ",I:"Ｉ",J:"Ｊ",
@@ -68,8 +82,8 @@ function getPY(s){
 	for(var i=0;i<a.length;i++){
 		var c=a[i];
 		result.push([c]);
-		if(/[0-9a-zA-Z]/.test(c)){
-		
+		if(c in dictionary.transAsc || c in dictionary.transSymbol){
+	
 		}else{
 			var r=new RegExp("[a-z]+\\d[^\\|]*"+c,"ig");
 			var m=dict.match(r);
@@ -85,7 +99,7 @@ function getPY(s){
 	// [[1],[2],[3],[a],[b],[c],["长","chang2","zhang3"],["短","duan3"]]
 }
 function showCandidate(){
-	s=srcTxt.value.replace(/[\x00-\x19,\x21-\x2f,\x3a-\x40,\x5b-\x60,\x7b-\xff]/g,"")
+	s=srcTxt.value.replace(/[\x00-\x19,\x7b-\xff]/g,"")
 	s=s.replace(/(\D|^)(\d)/g,"$1#$2");//数字前加#
 	s=s.replace(/([A-Z]{2,})/g,"=$1")
 	s=s.replace(/([A-Z]{1})/g,"=$1")
@@ -137,6 +151,9 @@ function getBraille(){
 		if(py.length==1){
 			if (dictionary.transAsc[t]){
 				b.push(dictionary.transAsc[t]);
+				data.braille.push(b);
+			}else if (dictionary.transSymbol[t]){
+				b=b.concat(dictionary.transSymbol[t]);
 				data.braille.push(b);
 			}else{
 				//抛弃不识别字符；
@@ -199,7 +216,7 @@ function showBraille(){
 			if(data.showText){
 				lines[lineCount].push("　 ");
 				lines[lineCount+1].push("　 ");
-				if(/[0-9a-zA-Z#=]/.test(t[0])){
+				if(t[0] in dictionary.transFullwidth){
 					lines[lineCount+2].push(dictionary.transFullwidth[t[0]]+" ");
 				}else{
 					lines[lineCount+2].push(t[0]+" ");
