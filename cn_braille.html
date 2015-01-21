@@ -18,7 +18,8 @@
     		<input type="radio" id=blankchar3 name=blankchar onclick="data.blankChar=' ';getBraille()" /><label for=blankchar3>半角空格</label>
     显示原文<input type="checkbox" checked onclick="data.showText=checked;getBraille()" />
     显示音调<input type="checkbox" checked onclick="data.showTone=checked;getBraille()" />
-	每行<input onchange="data.maxCols=value;getBraille()" value=20>方
+    翻转显示<input type="checkbox" onclick="data.flipVertical=checked;getBraille()" />
+	<br>每行<input onchange="data.maxCols=value;getBraille()" value=20>方
   </fieldset><br>
 在这里输入要转换的文字：<br>
  <input value="输入几个字试试看 Hello World" id="srcTxt" size="100"> 
@@ -104,8 +105,8 @@ function getPY(s){
 function showCandidate(){
 	s=srcTxt.value.replace(/[\x00-\x19,\x7b-\xff]/g,"")
 	s=s.replace(/(\D|^)(\d)/g,"$1#$2");//数字前加#
-	s=s.replace(/([A-Z]{2,})/g,"=$1")
-	s=s.replace(/([A-Z]{1})/g,"=$1")
+	s=s.replace(/([A-Z]{2,})/g,"==$1")
+	s=s.replace(/(^|[^A-Z=])([A-Z])/g,"$1=$2")
 	data.optionalPY=getPY(s);
 	var h=[];
 	var tmp=[];
@@ -141,7 +142,8 @@ var data={
 	maxCols:20,
 	blankChar:"○",
 	showText:true,
-	showTone:true
+	showTone:true,
+	flipVertical:false
 }
 function getBraille(){
 	data.braille=[];
@@ -202,6 +204,11 @@ function showBraille(){
 	for(var i=0;i<data.braille.length;i++){
 			var t=data.braille[i];
 			if(col+t.length>data.maxCols){ //起一新行
+				for(var j=0;j<data.maxCols-col;j++){
+				lines[lineCount].push(bc);
+				lines[lineCount+1].push(bc);
+				lines[lineCount+2].push(bc);
+				}			
 				lines.push([],[],[],[]);
 				col=0;
 				lineCount+=4;
@@ -219,11 +226,16 @@ function showBraille(){
 			if(data.showText){
 				lines[lineCount].push("　 ");
 				lines[lineCount+1].push("　 ");
-				if(t[0] in dictionary.transFullwidth){
-					lines[lineCount+2].push(dictionary.transFullwidth[t[0]]+" ");
-				}else{
-					lines[lineCount+2].push(t[0]+" ");
+				var txt=t[0];
+				if(txt in dictionary.transFullwidth){
+					txt=dictionary.transFullwidth[txt];
 				}
+				if(data.flipVertical){
+					txt=" "+txt;
+				}else{
+					txt=txt+" "
+				}
+					lines[lineCount+2].push(txt);
 			}else{
 				lines[lineCount].push(" ");
 				lines[lineCount+1].push(" ");
@@ -232,6 +244,9 @@ function showBraille(){
 				
 		}
 		for(var i=0;i<lines.length;i++){
+			if(data.flipVertical){
+				lines[i].reverse()
+			}
 			lines[i]=lines[i].join("");
 		}
 		document.getElementById("output2").value=lines.join("\n");
