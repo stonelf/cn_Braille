@@ -203,7 +203,7 @@ function showBraille(){
 	var bc=data.blankChar;
 	for(var i=0;i<data.braille.length;i++){
 			var t=data.braille[i];
-			if(col+t.length>data.maxCols){ //起一新行
+			if(col+t.length-1>data.maxCols){ //起一新行
 				for(var j=0;j<data.maxCols-col;j++){
 				lines[lineCount].push(bc);
 				lines[lineCount+1].push(bc);
