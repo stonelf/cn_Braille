@@ -8,26 +8,34 @@
 <meta name="感谢" content="https://github.com/overtrue/pinyin">
 <meta name="字典从这里获取" content="http://www.mdbg.net/chindict/chindict.php?page=cedict">
 <meta name="待优化" content="目前多音字要逐个手工识别，只能做简单文本转换。对于多音字需要做词匹配优选最可能的读音">
+<style>
+	body{font-size: 24px;}
+	input{font-size: 24px;}
+	textarea{font-size:20px;}
+</style>
 </head>
 <body>
- <fieldset>
-    <legend>转换选项</legend>
-    空白显示为
-    		<input type="radio" id=blankchar1 name=blankchar checked onclick="data.blankChar='○';getBraille()" /><label for=blankchar1>圆圈</label>
-    		<input type="radio" id=blankchar2 name=blankchar onclick="data.blankChar='　';getBraille()" /><label for=blankchar2>全角空格</label>
-    		<input type="radio" id=blankchar3 name=blankchar onclick="data.blankChar=' ';getBraille()" /><label for=blankchar3>半角空格</label>
-    显示原文<input type="checkbox" checked onclick="data.showText=checked;getBraille()" />
-    显示音调<input type="checkbox" checked onclick="data.showTone=checked;getBraille()" />
-    翻转显示<input type="checkbox" onclick="data.flipVertical=checked;getBraille()" />
+	<fieldset>
+	<legend>转换选项</legend>
+	<p>空白显示为
+		<label><input type="radio" name=blankchar checked onclick="data.blankChar='○';getBraille()" />圆圈</label>
+		<label><input type="radio" name=blankchar onclick="data.blankChar='　';getBraille()" />全角空格</label>
+		<label><input type="radio" name=blankchar onclick="data.blankChar=' ';getBraille()" />半角空格</label>
+	</p>
+	<p><label>显示原文<input type="checkbox" checked onclick="data.showText=checked;getBraille()" /></label></p>
+	<p><label>显示音调<input type="checkbox" checked onclick="data.showTone=checked;getBraille()" /></label></p>
+	<p><label>翻转显示<input type="checkbox" onclick="data.flipVertical=checked;getBraille()" /></label></p>
 	<br>每行<input onchange="data.maxCols=value;getBraille()" value=20>方
-  </fieldset><br>
-在这里输入要转换的文字：<br>
- <input value="输入几个字试试看 Hello World" id="srcTxt" size="100"> 
-<button onclick="showCandidate();">开始</button><br>
+	</fieldset><br>
+<p>在这里输入要转换的文字：</p>
+<p><input value="输入几个字试试看 Hello World" id="srcTxt" size="100" style="font-size:2em"></p>
+<p><button style="font-size:2em" onclick="showCandidate();">开始</button></p>
+<p>
  <fieldset>
     <legend>同音字处理</legend>
-	<div id=output></div>
+	<div id=output style="font-size:2em"></div>
 </fieldset>
+</p>
 <textarea id=output2 style="width:95%;font-family:PT Mono,宋体;overflow-y:visible" rows=10></textarea>
 </body>
 <script type="text/javascript">
@@ -103,7 +111,7 @@ function getPY(s){
 	// [[1],[2],[3],[a],[b],[c],["长","chang2","zhang3"],["短","duan3"]]
 }
 function showCandidate(){
-	s=srcTxt.value.replace(/[\x00-\x19,\x7b-\xff]/g,"")
+	s=document.getElementById("srcTxt").value.replace(/[\x00-\x19,\x7b-\xff]/g,"")
 	s=s.replace(/(\D|^)(\d)/g,"$1#$2");//数字前加#
 	s=s.replace(/([A-Z]{2,})/g,"==$1")
 	s=s.replace(/(^|[^A-Z=])([A-Z])/g,"$1=$2")
@@ -135,7 +143,7 @@ function changePY(e){
 	getBraille();
 }
 var data={
-	srcText :"",
+//	srcText :"",
 	optionalPY :[],
 	selectedPYIndex :[],
 	braille :[],
