@@ -124,20 +124,18 @@ function showCandidate(){
 		if(t.length<3){
 			h.push(t[0]);
 		}else{
-			h.push("<span style='overflow:hidden;width:"+(t[0].length+t[1].length/2+0.5)+"em'>")
 			h.push("<select onchange='changePY(this)' id=o_"+i+">");
 			for(var j=1;j<t.length;j++){
 				h.push("<option style='background-color:"+(j==1?"#FFFFCC":"#CCFFFF")+"'>"+t[0]+"("+
-				t[j].replace(/([ae])(\D*)(\d)/g,(a,b,c,d,e)=>{ 
+				t[j].replace(/([ae])(\D*)(\d)/,(a,b,c,d,e)=>{ 
 					return tongs[b].charAt(d-1)+c
-				}).replace(/([oi])(\D*)(\d)/g,(a,b,c,d,e)=>{ 
+				}).replace(/([oi])(\D*)(\d)/,(a,b,c,d,e)=>{ 
 					return tongs[b].charAt(d-1)+c
-				}).replace(/([uv])(\D)(\d)/g,(a,b,c,d,e)=>{ 
+				}).replace(/([uv])(\D*)(\d)/,(a,b,c,d,e)=>{ 
 					return tongs[b].charAt(d-1)+c
 				}).replace(/v/g,"ü")+")</option>")
 			}
 			h.push("</select>");
-			h.push("</span>");
 		}
 		data.selectedPYIndex[i]=0;
 	};
