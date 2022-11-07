@@ -65,7 +65,7 @@ var dictionary={
 	},
 	transPY3 :{
 		1:"1",2:"2",3:"3",4:"23",5:""// 阳平1 阴平2 上声3 去声23
-		//用的都是先行盲文方案。
+		//用的都是现行盲文方案。
 	},
 	transFullwidth :{
 		" ":"　","!":"！","\"":"＂","#":"＃","$":"﹩","%":"﹪","&":"﹠","'":"’","(":"（",")":"）",
@@ -184,6 +184,9 @@ function getBraille(){
 			p3=py.charAt(py.length-1);
 			if(p1){
 				b.push(dictionary.transPY1[p1]);
+			}
+			if(!/^((zhi)|(chi)|(shi)|(zi)|(ci)|(si)|(ri))\d*$/.test(py)){
+				//这几个拼音不需要韵母
 			}
 			b.push(dictionary.transPY2[p2]);
 			if(data.showTone){
