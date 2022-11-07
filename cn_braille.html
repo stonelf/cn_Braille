@@ -127,11 +127,11 @@ function showCandidate(){
 			h.push("<select onchange='changePY(this)' id=o_"+i+">");
 			for(var j=1;j<t.length;j++){
 				h.push("<option style='background-color:"+(j==1?"#FFFFCC":"#CCFFFF")+"'>"+t[0]+"("+
-				t[j].replace(/([ae])(\D*)(\d)/,(a,b,c,d,e)=>{ 
+				t[j].replace(/([ae])(\D*)(\d)/,(a,b,c,d)=>{ 
 					return tongs[b].charAt(d-1)+c
-				}).replace(/([oi])(\D*)(\d)/,(a,b,c,d,e)=>{ 
+				}).replace(/([oi])(\D*)(\d)/,(a,b,c,d)=>{ 
 					return tongs[b].charAt(d-1)+c
-				}).replace(/([uv])(\D*)(\d)/,(a,b,c,d,e)=>{ 
+				}).replace(/([uv])(\D*)(\d)/,(a,b,c,d)=>{ 
 					return tongs[b].charAt(d-1)+c
 				}).replace(/v/g,"ü")+")</option>")
 			}
