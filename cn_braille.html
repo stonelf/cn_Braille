@@ -118,6 +118,7 @@ function showCandidate(){
 	data.optionalPY=getPY(s);
 	var h=[];
 	var tmp=[];
+	const tongs={a:"āáǎà",o:"ōóǒò",e:"ēéěè",i:"īíǐì",u:"ūúǔù",v:"ǖǘǚǜ"}
 	for (var i=0;i<data.optionalPY.length;i++){
 		var t=data.optionalPY[i];
 		if(t.length<3){
@@ -127,8 +128,12 @@ function showCandidate(){
 			h.push("<select onchange='changePY(this)' id=o_"+i+">");
 			for(var j=1;j<t.length;j++){
 				h.push("<option style='background-color:"+(j==1?"#FFFFCC":"#CCFFFF")+"'>"+t[0]+"("+
-				t[j].replace(/([aoeiuv])([^aoeiuv]*)(\d)/g,(c,d,e,f)=>{
-					return {a:"āáǎà",o:"ōóǒò",e:"ēéěè",i:"īíǐì",u:"ūúǔù",v:"ǖǘǚǜ"}[d].charAt(f-1)+e
+				t[j].replace(/([ae])(\D*)(\d)/g,(a,b,c,d,e)=>{ 
+					return tongs[b].charAt(d-1)+c
+				}).replace(/([oi])(\D*)(\d)/g,(a,b,c,d,e)=>{ 
+					return tongs[b].charAt(d-1)+c
+				}).replace(/([uv])(\D)(\d)/g,(a,b,c,d,e)=>{ 
+					return tongs[b].charAt(d-1)+c
 				}).replace(/v/g,"ü")+")</option>")
 			}
 			h.push("</select>");
