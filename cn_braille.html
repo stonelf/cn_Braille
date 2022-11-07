@@ -9,9 +9,9 @@
 <meta name="字典从这里获取" content="http://www.mdbg.net/chindict/chindict.php?page=cedict">
 <meta name="待优化" content="目前多音字要逐个手工识别，只能做简单文本转换。对于多音字需要做词匹配优选最可能的读音">
 <style>
-	body{font-size: 24px;}
-	input{font-size: 24px;}
-	textarea{font-size:20px;}
+	body,input{font-size: 20px;}
+	select{font-size:32}
+	textarea{font-size:18px;}
 </style>
 </head>
 <body>
@@ -25,7 +25,7 @@
 	<p><label>显示原文<input type="checkbox" checked onclick="data.showText=checked;getBraille()" /></label></p>
 	<p><label>显示音调<input type="checkbox" checked onclick="data.showTone=checked;getBraille()" /></label></p>
 	<p><label>翻转显示<input type="checkbox" onclick="data.flipVertical=checked;getBraille()" /></label></p>
-	<br>每行<input onchange="data.maxCols=value;getBraille()" value=20>方
+	<br>每行<input onchange="data.maxCols=value;getBraille()" value=20 type="number" min=6 max=100 step=1>方
 	</fieldset><br>
 <p>在这里输入要转换的文字：</p>
 <p><input value="输入几个字试试看 Hello World" id="srcTxt" size="100" style="font-size:2em"></p>
@@ -126,7 +126,10 @@ function showCandidate(){
 			h.push("<span style='overflow:hidden;width:"+(t[0].length+t[1].length/2+0.5)+"em'>")
 			h.push("<select onchange='changePY(this)' id=o_"+i+">");
 			for(var j=1;j<t.length;j++){
-				h.push("<option style='background-color:"+(j==1?"#FFFFCC":"#CCFFFF")+"'>"+t[0]+"("+t[j]+")</option>")
+				h.push("<option style='background-color:"+(j==1?"#FFFFCC":"#CCFFFF")+"'>"+t[0]+"("+
+				t[j].replace(/([aoeiuv])([^aoeiuv]*)(\d)/g,(c,d,e,f)=>{
+					return {a:"āáǎà",o:"ōóǒò",e:"ēéěè",i:"īíǐì",u:"ūúǔù",v:"ǖǘǚǜ"}[d].charAt(f-1)+e
+				}).replace(/v/g,"ü")+")</option>")
 			}
 			h.push("</select>");
 			h.push("</span>");
@@ -143,7 +146,7 @@ function changePY(e){
 	getBraille();
 }
 var data={
-//	srcText :"",
+	srcText :"",
 	optionalPY :[],
 	selectedPYIndex :[],
 	braille :[],
