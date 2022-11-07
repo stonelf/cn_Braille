@@ -187,8 +187,8 @@ function getBraille(){
 			}
 			if(!/^((zhi)|(chi)|(shi)|(zi)|(ci)|(si)|(ri))\d*$/.test(py)){
 				//这几个拼音不需要韵母
+				b.push(dictionary.transPY2[p2]);
 			}
-			b.push(dictionary.transPY2[p2]);
 			if(data.showTone){
 				b.push(dictionary.transPY3[p3])
 			};
